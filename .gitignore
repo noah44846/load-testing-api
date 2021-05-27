@@ -1,0 +1,11 @@
+# IntelliJ IDEA files
+.idea/
+*.iml
+
+# Gradle folder
+.gradle/
+
+# Compile and build folders
+out/
+build/
+

@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'ch.heia_fr.tic'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JAX-RS
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1+'
+    compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3+'
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.34+'
+    compile group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: '2.34+'
+    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.34+'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.34+'
+    // Logging
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14+'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14+'
+    // Server
+    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1+'
+}
