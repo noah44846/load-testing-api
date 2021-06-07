@@ -53,6 +53,12 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
                 dataSourceMonitorHandler.isRunning() ? TestStatus.RUNNING : TestStatus.IDLE);
     }
     
+    /**
+     * Runs the load test app.
+     *
+     * @throws WebApplicationException if there is an error parsing the configuration
+     * @throws BadRequestException if the app is already running
+     */
     private void runLoadTest() {
         try {
             // the config passed to the method is ignored for now
@@ -68,14 +74,18 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
                 loadTestHandler.stop();
             });
         } catch (IOException e) {
-            // throws a 500 because the configuration file can't be parsed
             throw new WebApplicationException(e);
         } catch (IllegalStateException e) {
-            // throws a 400 because a test is already running
             throw new BadRequestException(e);
         }
     }
     
+    /**
+     * Runs the dataSource monitoring app.
+     *
+     * @throws WebApplicationException if there is an error parsing the configuration or running the test
+     * @throws BadRequestException if the app is already running
+     */
     private void runDataSourceMonitor() {
         try {
             ch.heia_fr.tic.datasource_monitor.Config conf = ch.heia_fr.tic.datasource_monitor.ConfigFactory
@@ -93,6 +103,8 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
             });
         } catch (IOException | MalformedObjectNameException e) {
             throw new WebApplicationException(e);
+        } catch (IllegalStateException e) {
+            throw new BadRequestException(e);
         }
     }
 }
