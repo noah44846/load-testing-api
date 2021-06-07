@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Properties>
-        <Property name="log_file_base_path">/Users/noahgodel/projects/load-testing-api/log</Property>
+        <Property name="log_file_base_path"><!-- Insert your log files directory path here --></Property>
     </Properties>
     <Appenders>
         <!-- All level log message (for dev or debug) -->
