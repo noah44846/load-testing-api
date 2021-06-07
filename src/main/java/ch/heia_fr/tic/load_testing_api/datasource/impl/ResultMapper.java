@@ -3,6 +3,7 @@ package ch.heia_fr.tic.load_testing_api.datasource.impl;
 import ch.heia_fr.tic.load_testing_api.domain.ResultHandler;
 import ch.heia_fr.tic.load_testing_api.utils.PropertiesUtility;
 
+import javax.ws.rs.NotFoundException;
 import java.io.File;
 
 /**
@@ -24,11 +25,19 @@ public class ResultMapper implements ResultHandler {
     
     @Override
     public File getLoadTestResult() {
-        return new File(LT_RESULT_PATH);
+        File result = new File(LT_RESULT_PATH);
+        if (!result.exists()) {
+            throw new NotFoundException("The load test was never run.");
+        }
+        return result;
     }
     
     @Override
     public File getDataSourceMonitorResult() {
-        return new File(DSM_RESULT_PATH);
+        File result = new File(DSM_RESULT_PATH);
+        if (!result.exists()) {
+            throw new NotFoundException("The dataSource monitor was never run.");
+        }
+        return result;
     }
 }
