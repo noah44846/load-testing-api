@@ -13,12 +13,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Status {
     
     /**
-     * The status of the load test app
+     * The status of the load test app.
      */
     public final TestStatus loadTestStatus;
     
     /**
-     * The status of the DataSource monitor app
+     * The status of the DataSource monitor app.
      */
     public final TestStatus dataSourceMonitorStatus;
     

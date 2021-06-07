@@ -21,7 +21,7 @@ public interface LoadTestAppsManager {
     void stop();
     
     /**
-     * Gets the status of the test if there is any
+     * Gets the status of the test if there is any.
      *
      * @return returns the a {@link Status} object of the test
      */
