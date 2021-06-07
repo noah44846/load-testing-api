@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="log_file_base_path"><!-- Insert your log files directory path here --></Property>
+    </Properties>
+    <Appenders>
+        <!-- All level log message (for dev or debug) -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level [%t] %logger{36} - %msg%n"/>
+        </Console>
+        <!-- Only "info" level log message -->
+        <!-- TODO Set appender to true in production -->
+        <File name="INFO" fileName="${log_file_base_path}/info.log" append="false">
+            <Filters>
+                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d{dd-MMM-yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36} - %msg%n"/>
+        </File>
+        <!-- "warn", "error" and "fatal" level log message -->
+        <!-- TODO Set appender to true in production -->
+        <File name="ERROR" fileName="${log_file_base_path}/error.log" append="false">
+            <ThresholdFilter level="warn" onMatch="ACCEPT"/>
+            <PatternLayout pattern="%d{dd-MMM-yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36} - %msg%n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="all">
+            <!-- TODO Disable Console in production -->
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="INFO"/>
+            <AppenderRef ref="ERROR"/>
+        </Root>
+    </Loggers>
+</Configuration>
