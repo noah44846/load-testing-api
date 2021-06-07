@@ -5,7 +5,13 @@
 # Gradle folder
 .gradle/
 
+# Log files
+log/
+*.log
+
 # Compile and build folders
 out/
 build/
 
+# Load testing applications output
+output/

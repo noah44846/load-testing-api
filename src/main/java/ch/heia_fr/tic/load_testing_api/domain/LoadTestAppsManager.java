@@ -22,6 +22,8 @@ public interface LoadTestAppsManager {
     
     /**
      * Gets the status of the test if there is any
+     *
+     * @return returns the a {@link Status} object of the test
      */
     Status getStatus();
 }
