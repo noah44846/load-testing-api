@@ -98,13 +98,13 @@ public class LTConfiguration {
     /**
      * Returns a new {@code LTConfiguration} with its properties initialized from parameters (used by Jackson for the request payload deserialization).
      *
-     * @param baseURL the base url of the API to test
-     * @param subSite the sub site to test
-     * @param httpMethod the http method of the request
-     * @param requestBody the request body
-     * @param contentType the content-type of the request body
-     * @param apiKey the API key for authentication
-     * @param authType the authentication type
+     * @param baseURL          the base url of the API to test
+     * @param subSite          the sub site to test
+     * @param httpMethod       the http method of the request
+     * @param requestBody      the request body
+     * @param contentType      the content-type of the request body
+     * @param apiKey           the API key for authentication
+     * @param authType         the authentication type
      * @param numberOfRequests the number of requests the test will send
      */
     public LTConfiguration(@JsonProperty(BASE_URL) String baseURL, @JsonProperty(SUB_SITE) String subSite, @JsonProperty(HTTP_METHOD) String httpMethod, @JsonProperty(REQUEST_BODY) String requestBody, @JsonProperty(CONTENT_TYPE) String contentType, @JsonProperty(API_KEY) String apiKey, @JsonProperty(AUTH_TYPE) String authType, @JsonProperty(NUM_OF_REQUESTS) int numberOfRequests) {

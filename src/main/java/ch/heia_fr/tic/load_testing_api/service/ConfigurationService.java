@@ -52,7 +52,7 @@ public interface ConfigurationService {
      * Throws a 404 Not Found error if the resource does not exist.
      *
      * @param configuration the data of the configuration resource to update
-     * @param name the name of the resource
+     * @param name          the name of the resource
      */
     @PUT
     @Path("/{name}")

@@ -3,7 +3,6 @@ package ch.heia_fr.tic.load_testing_api.domain.dto;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonRawValue;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -71,11 +70,11 @@ public class DSMConfiguration {
     /**
      * Returns a new {@code DSMConfiguration} with its properties initialized from parameters (used by Jackson for the request payload deserialization).
      *
-     * @param jmxURI the jmx uri
-     * @param objectName the object name
+     * @param jmxURI            the jmx uri
+     * @param objectName        the object name
      * @param watchedAttributes the watched attributes
-     * @param timeout the timeout
-     * @param testingDuration the testing duration
+     * @param timeout           the timeout
+     * @param testingDuration   the testing duration
      */
     public DSMConfiguration(@JsonProperty(JMX_URI) String jmxURI, @JsonProperty(OBJECT_NAME) String objectName, @JsonProperty(WATCHED_ATTRIBUTES) String[] watchedAttributes, @JsonProperty(TIMEOUT) long timeout, @JsonProperty(TESTING_DURATION) String testingDuration) {
         this.jmxURI = jmxURI;

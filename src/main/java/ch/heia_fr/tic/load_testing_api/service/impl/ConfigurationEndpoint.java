@@ -52,14 +52,13 @@ public class ConfigurationEndpoint implements ConfigurationService {
     public Response addConfiguration(Configuration configuration) {
         ConfigurationHandler configurationHandler = StorageFactory.getConfigurationStorage();
         Configuration newConfiguration = configurationHandler.addConfiguration(configuration);
-    
+        
         URI uri;
         String requestUri = this.uriInfo.getPath();
         String path = String.format(NEW_CONFIGURATION_PATH, requestUri, newConfiguration.name);
         try {
             uri = new URI(path);
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             throw new WebServiceException(e);
         }
         

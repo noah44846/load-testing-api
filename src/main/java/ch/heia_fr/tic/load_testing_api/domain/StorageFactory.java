@@ -10,7 +10,7 @@ import ch.heia_fr.tic.load_testing_api.datasource.impl.ResultMapper;
  */
 public enum StorageFactory {
     ;
-
+    
     /**
      * Returns a loosely coupled storage to manage user data.
      *

@@ -48,8 +48,8 @@ public final class Configuration {
     /**
      * Returns a new {@code Configuration} with its properties initialized from parameters (used by Jackson for the request payload deserialization).
      *
-     * @param name the name of the configuration
-     * @param ltConfiguration the configuration of the load test app
+     * @param name             the name of the configuration
+     * @param ltConfiguration  the configuration of the load test app
      * @param dsmConfiguration the configuration of the dataSource monitor app
      */
     public Configuration(@JsonProperty(NAME) String name, @JsonProperty(LT_CONFIGURATION) LTConfiguration ltConfiguration, @JsonProperty(DSM_CONFIGURATION) DSMConfiguration dsmConfiguration) {
