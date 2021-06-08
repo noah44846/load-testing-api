@@ -4,6 +4,7 @@ import ch.heia_fr.tic.load_testing_api.domain.ConfigurationHandler;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Configuration;
 import ch.heia_fr.tic.load_testing_api.domain.dto.DSMConfiguration;
 import ch.heia_fr.tic.load_testing_api.domain.dto.LTConfiguration;
+import ch.heia_fr.tic.load_testing_api.utils.PropertiesUtility;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
@@ -20,6 +21,27 @@ import java.util.Properties;
  * @author Noah Godel (noah.godel@hefr.ch)
  */
 public class ConfigurationMapper implements ConfigurationHandler {
+    
+    /**
+     * Path of the directory containing the configuration files of the load test app.
+     */
+    public static final String LT_CONFIG_DIR = PropertiesUtility.getPropertyValue("configurations.lt");
+    
+    /**
+     * Path of the directory containing the configuration files of the dataSource monitor app.
+     */
+    public static final String DSM_CONFIG_DIR = PropertiesUtility.getPropertyValue("configurations.dsm");
+    
+    /**
+     * Pattern for the path of a load test configuration file.
+     */
+    public static final String LT_CONFIG_FILE_PATTERN = LT_CONFIG_DIR + "%s.properties";
+    
+    /**
+     * Pattern for the path of a dataSource monitor configuration file.
+     */
+    public static final String DSM_CONFIG_FILE_PATTERN = DSM_CONFIG_DIR + "%s.properties";
+    
     @Override
     public Collection<Configuration> getConfigurationList() {
         return null;
@@ -49,12 +71,12 @@ public class ConfigurationMapper implements ConfigurationHandler {
     }
     
     private boolean alreadyExists(String name) {
-        return (!(new File(String.format("/Users/noahgodel/projects/load-testing-api/configurations/lt/%s.properties", name))).exists() ||
-                !(new File(String.format("/Users/noahgodel/projects/load-testing-api/configurations/dsm/%s.properties", name))).exists());
+        return (!(new File(String.format(LT_CONFIG_FILE_PATTERN, name))).exists() ||
+                !(new File(String.format(DSM_CONFIG_FILE_PATTERN, name))).exists());
     }
     
     private LTConfiguration getLTConfigurationFromName(String name) {
-        try (InputStream input = new FileInputStream(String.format("/Users/noahgodel/projects/load-testing-api/configurations/lt/%s.properties", name))) {
+        try (InputStream input = new FileInputStream(String.format(LT_CONFIG_FILE_PATTERN, name))) {
             Properties prop = new Properties();
             prop.load(input);
             return new LTConfiguration(
@@ -73,7 +95,7 @@ public class ConfigurationMapper implements ConfigurationHandler {
     }
     
     private DSMConfiguration getDSMConfigurationFromFile(String name) {
-        try (InputStream input = new FileInputStream(String.format("/Users/noahgodel/projects/load-testing-api/configurations/dsm/%s.properties", name))) {
+        try (InputStream input = new FileInputStream(String.format(DSM_CONFIG_FILE_PATTERN, name))) {
             Properties prop = new Properties();
             prop.load(input);
             return new DSMConfiguration(
