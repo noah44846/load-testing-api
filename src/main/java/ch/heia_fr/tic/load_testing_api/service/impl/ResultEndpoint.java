@@ -10,6 +10,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.io.File;
 
+/**
+ * Implements the service endpoint for the result resource.
+ *
+ * @author Noah Godel (noah.godel@hefr.ch)
+ */
 @Path("/results")
 @Produces("text/csv")
 public class ResultEndpoint implements ResultService {
