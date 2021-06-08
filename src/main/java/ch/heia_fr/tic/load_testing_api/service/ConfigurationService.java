@@ -26,12 +26,12 @@ public interface ConfigurationService {
      * <p>
      * Throws a 404 Not Found error if the resource does not exist.
      *
-     * @param id the ID of the resource
+     * @param name the name of the resource
      * @return the configuration resource, in the response body as JSON, based on the {@link Configuration} DTO with the HTTP status code 200 OK
      */
     @GET
-    @Path("/{id}")
-    Response getConfiguration(@PathParam("id") int id);
+    @Path("/{name}")
+    Response getConfiguration(@PathParam("name") String name);
     
     /**
      * Adds a new configuration resource from the {@code Configuration} data in the request payload.
@@ -52,11 +52,11 @@ public interface ConfigurationService {
      * Throws a 404 Not Found error if the resource does not exist.
      *
      * @param configuration the data of the configuration resource to update
-     * @param id the ID of the resource
+     * @param name the name of the resource
      */
     @PUT
-    @Path("/{id}")
-    void updateConfiguration(@Valid Configuration configuration, @PathParam("id") int id);
+    @Path("/{name}")
+    void updateConfiguration(@Valid Configuration configuration, @PathParam("name") String name);
     
     /**
      * Deletes the configuration resource identified by the {@code id} value.
@@ -65,9 +65,9 @@ public interface ConfigurationService {
      * <p>
      * Throws a 404 Not Found error if the resource does not exist.
      *
-     * @param id the ID of the resource
+     * @param name the name of the resource
      */
     @DELETE
-    @Path("/{id}")
-    void deleteConfiguration(@PathParam("id") int id);
+    @Path("/{name}")
+    void deleteConfiguration(@PathParam("name") String name);
 }

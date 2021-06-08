@@ -29,7 +29,7 @@ public class ManagementEndpoint implements ManagementService {
     public void run(int id) {
         // the identified config is ignored for now
         // so an empty object is passed for now
-        loadTestAppsManager.run(new Configuration());
+        loadTestAppsManager.run(new Configuration("", null, null));
     }
     
     @Override

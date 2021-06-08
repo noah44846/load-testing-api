@@ -4,20 +4,13 @@ import ch.heia_fr.tic.load_testing_api.domain.ConfigurationHandler;
 import ch.heia_fr.tic.load_testing_api.domain.StorageFactory;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Configuration;
 import ch.heia_fr.tic.load_testing_api.service.ConfigurationService;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import javax.xml.ws.WebServiceException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collection;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 /**
  * Implements the service endpoint for the configuration resource.
@@ -35,8 +28,11 @@ public class ConfigurationEndpoint implements ConfigurationService {
     }
     
     @Override
-    public Response getConfiguration(int id) {
-        return null;
+    public Response getConfiguration(String name) {
+        ConfigurationHandler configurationHandler = StorageFactory.getConfigurationStorage();
+        Configuration configuration = configurationHandler.getConfiguration(name);
+        ResponseBuilder responseBuilder = Response.ok(configuration);
+        return responseBuilder.build();
     }
     
     @Override
@@ -45,10 +41,10 @@ public class ConfigurationEndpoint implements ConfigurationService {
     }
     
     @Override
-    public void updateConfiguration(Configuration configuration, int id) {
+    public void updateConfiguration(Configuration configuration, String name) {
     }
     
     @Override
-    public void deleteConfiguration(int id) {
+    public void deleteConfiguration(String name) {
     }
 }

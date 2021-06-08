@@ -23,10 +23,10 @@ public interface ConfigurationHandler {
     /**
      * Returns a specific configuration.
      *
-     * @param id the unique ID of the configuration to return
+     * @param name the unique name of the configuration to return
      * @return the corresponding {@code Configuration}, or {@code null} if the configuration does not exist
      */
-    Configuration getConfiguration(int id);
+    Configuration getConfiguration(String name);
     
     /**
      * Stores a new configuration.
@@ -49,8 +49,8 @@ public interface ConfigurationHandler {
     /**
      * Deletes an configuration.
      *
-     * @param id the unique ID of the configuration to delete
+     * @param name the unique name of the configuration to delete
      * @return the deleted {@code Configuration}, or {@code null} if the configuration does not exist
      */
-    Configuration deleteConfiguration(int id);
+    Configuration deleteConfiguration(String name);
 }

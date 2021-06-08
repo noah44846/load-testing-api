@@ -17,11 +17,11 @@ public class DSMConfiguration {
     
     public @NotEmpty String[] watchedAttributes;
     
-    public @Min(0) int timeout;
+    public @Min(0) long timeout;
     
     public @NotBlank String testingDuration;
     
-    public DSMConfiguration(String jmxURI, String objectName, String[] watchedAttributes, int timeout, String testingDuration) {
+    public DSMConfiguration(String jmxURI, String objectName, String[] watchedAttributes, long timeout, String testingDuration) {
         this.jmxURI = jmxURI;
         this.objectName = objectName;
         this.watchedAttributes = watchedAttributes;
