@@ -6,12 +6,10 @@ import ch.heia_fr.tic.load_testing_api.domain.dto.DSMConfiguration;
 import ch.heia_fr.tic.load_testing_api.domain.dto.LTConfiguration;
 import ch.heia_fr.tic.load_testing_api.utils.PropertiesUtility;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -57,7 +55,16 @@ public class ConfigurationMapper implements ConfigurationHandler {
     
     @Override
     public Configuration addConfiguration(Configuration configuration) {
-        return null;
+        if (alreadyExists(configuration.name)) {
+            throw new BadRequestException("Configuration already exists.");
+        }
+        if (configuration.ltConfiguration != null) {
+            writeLTConfigurationToFile(configuration.ltConfiguration, configuration.name);
+        }
+        if (configuration.dsmConfiguration != null) {
+            writeDSMConfigurationToFile(configuration.dsmConfiguration, configuration.name);
+        }
+        return getConfiguration(configuration.name);
     }
     
     @Override
@@ -71,40 +78,73 @@ public class ConfigurationMapper implements ConfigurationHandler {
     }
     
     private boolean alreadyExists(String name) {
-        return (!(new File(String.format(LT_CONFIG_FILE_PATTERN, name))).exists() ||
-                !(new File(String.format(DSM_CONFIG_FILE_PATTERN, name))).exists());
+        return ((new File(String.format(LT_CONFIG_FILE_PATTERN, name))).exists() ||
+                (new File(String.format(DSM_CONFIG_FILE_PATTERN, name))).exists());
     }
     
     private LTConfiguration getLTConfigurationFromName(String name) {
-        try (InputStream input = new FileInputStream(String.format(LT_CONFIG_FILE_PATTERN, name))) {
-            Properties prop = new Properties();
-            prop.load(input);
-            return new LTConfiguration(
-                    prop.getProperty("baseURL"),
-                    prop.getProperty("subSite"),
-                    prop.getProperty("httpMethod"),
-                    prop.getProperty("requestBody"),
-                    prop.getProperty("contentType"),
-                    prop.getProperty("authType"),
-                    prop.getProperty("apiKey"),
-                    Integer.parseInt(prop.getProperty("numberOfRequests"))
-            );
+        Properties props = getPropsFromFile(String.format(LT_CONFIG_FILE_PATTERN, name));
+        return new LTConfiguration(
+                props.getProperty("baseURL"),
+                props.getProperty("subSite"),
+                props.getProperty("httpMethod"),
+                props.getProperty("requestBody"),
+                props.getProperty("contentType"),
+                props.getProperty("authType"),
+                props.getProperty("apiKey"),
+                Integer.parseInt(props.getProperty("numberOfRequests"))
+        );
+    }
+    
+    private void writeLTConfigurationToFile(LTConfiguration config, String name) {
+        Properties props = new Properties();
+        props.setProperty("outputPath", ResultMapper.LT_RESULT_PATH);
+        props.setProperty("baseURL", config.baseURL);
+        props.setProperty("subSite", config.subSite);
+        props.setProperty("httpMethod", config.httpMethod);
+        props.setProperty("requestBody", config.requestBody);
+        props.setProperty("contentType", config.contentType);
+        props.setProperty("apiKey", config.apiKey);
+        props.setProperty("authType", config.authType);
+        props.setProperty("numberOfRequests", config.numberOfRequests + "");
+        writePropsToFile(props, String.format(LT_CONFIG_FILE_PATTERN, name));
+    }
+    
+    private DSMConfiguration getDSMConfigurationFromFile(String name) {
+        Properties props = getPropsFromFile(String.format(DSM_CONFIG_FILE_PATTERN, name));
+        return new DSMConfiguration(
+                props.getProperty("jmx.uri"),
+                props.getProperty("mbean.objectName"),
+                props.getProperty("mbean.watchedAttributes").split(" "),
+                Long.parseLong(props.getProperty("monitor.timeout")),
+                props.getProperty("monitor.testingDuration")
+        );
+    }
+    
+    private void writeDSMConfigurationToFile(DSMConfiguration config, String name) {
+        Properties props = new Properties();
+        props.setProperty("outputPath", ResultMapper.DSM_RESULT_PATH);
+        props.setProperty("jmx.uri", config.jmxURI);
+        props.setProperty("mbean.objectName", config.objectName);
+        props.setProperty("mbean.watchedAttributes", String.join(" ", config.watchedAttributes));
+        props.setProperty("monitor.timeout", config.timeout + "");
+        props.setProperty("monitor.testingDuration", config.testingDuration);
+        writePropsToFile(props, String.format(DSM_CONFIG_FILE_PATTERN, name));
+    }
+    
+    private void writePropsToFile(Properties props, String filepath) {
+        try (OutputStream output = new FileOutputStream(filepath)) {
+            props.store(output, null);
         } catch (IOException e) {
             throw new WebApplicationException(e);
         }
     }
     
-    private DSMConfiguration getDSMConfigurationFromFile(String name) {
-        try (InputStream input = new FileInputStream(String.format(DSM_CONFIG_FILE_PATTERN, name))) {
-            Properties prop = new Properties();
-            prop.load(input);
-            return new DSMConfiguration(
-                    prop.getProperty("jmx.url"),
-                    prop.getProperty("mbean.objectName"),
-                    prop.getProperty("mbean.watchedAttributes").split(" "),
-                    Long.parseLong(prop.getProperty("monitor.timeout")),
-                    prop.getProperty("monitor.testingDuration")
-            );
+    private Properties getPropsFromFile(String filepath) {
+        try (InputStream input = new FileInputStream(filepath)) {
+            Properties props = new Properties();
+            props.load(input);
+            return props;
         } catch (IOException e) {
             throw new WebApplicationException(e);
         }
