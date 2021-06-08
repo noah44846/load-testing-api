@@ -1,9 +1,11 @@
 package ch.heia_fr.tic.load_testing_api.service;
 
-import ch.heia_fr.tic.load_testing_api.domain.dto.Configuration;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Status;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -18,11 +20,11 @@ public interface ManagementService {
      * <p>
      * Throws a 400 Bad Request if another test is already running
      *
-     * @param id the ID of the configuration resource
+     * @param configName the name of the configuration resource
      */
     @POST
-    @Path("/run/{id}")
-    void run(@PathParam("id") int id);
+    @Path("/run/{configName}")
+    void run(@PathParam("configName") String configName);
     
     /**
      * Stops the currently running test.

@@ -1,7 +1,7 @@
 package ch.heia_fr.tic.load_testing_api.datasource.impl;
 
 import ch.heia_fr.tic.datasource_monitor.JMXMonitorHandler;
-import ch.heia_fr.tic.datasource_monitor.TestResults;
+import ch.heia_fr.tic.datasource_monitor.Result;
 import ch.heia_fr.tic.load_testing_api.domain.LoadTestAppsManager;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Configuration;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Status;
@@ -12,6 +12,7 @@ import javax.management.MalformedObjectNameException;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.WebApplicationException;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -31,9 +32,12 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     
     @Override
     public void run(Configuration configuration) {
-        // TODO add support for the DataSource monitor app
-        runLoadTest();
-        runDataSourceMonitor();
+        if (configuration.ltConfiguration != null) {
+            runLoadTest(String.format(ConfigurationMapper.LT_CONFIG_FILE_PATTERN, configuration.name));
+        }
+        if (configuration.dsmConfiguration != null) {
+            runDataSourceMonitor(String.format(ConfigurationMapper.DSM_CONFIG_FILE_PATTERN, configuration.name));
+        }
     }
     
     @Override
@@ -56,15 +60,16 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     /**
      * Runs the load test app.
      *
+     * @param configPath the path of the config to run
      * @throws WebApplicationException if there is an error parsing the configuration
-     * @throws BadRequestException if the app is already running
+     * @throws BadRequestException     if the app is already running
      */
-    private void runLoadTest() {
+    private void runLoadTest(String configPath) {
         try {
             // the config passed to the method is ignored for now
             ch.heia_fr.tic.loadtest.Config config = ch.heia_fr.tic.loadtest.ConfigFactory
                     .newInstance()
-                    .createConfigFromPropFile("config.properties");
+                    .createConfigFromPropFile(configPath);
             CompletableFuture.runAsync(() -> {
                 try {
                     ch.heia_fr.tic.loadtest.ResultWriter.writeToCSVFile(loadTestHandler.run(config), config.outputPath);
@@ -83,18 +88,19 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     /**
      * Runs the dataSource monitoring app.
      *
+     * @param configPath the path of the config to run
      * @throws WebApplicationException if there is an error parsing the configuration or running the test
-     * @throws BadRequestException if the app is already running
+     * @throws BadRequestException     if the app is already running
      */
-    private void runDataSourceMonitor() {
+    private void runDataSourceMonitor(String configPath) {
         try {
             ch.heia_fr.tic.datasource_monitor.Config conf = ch.heia_fr.tic.datasource_monitor.ConfigFactory
                     .newInstance()
-                    .createConfigFromPropFile("config1.properties");
-            CompletableFuture<TestResults> results = dataSourceMonitorHandler.run(conf);
+                    .createConfigFromPropFile(configPath);
+            CompletableFuture<List<Result>> results = dataSourceMonitorHandler.run(conf);
             CompletableFuture.runAsync(() -> {
                 try {
-                    ch.heia_fr.tic.datasource_monitor.ResultWriter.writeToCSVFile(results.get(), conf.outputPath, conf.attributes);
+                    ch.heia_fr.tic.datasource_monitor.ResultWriter.writeToCSVFile(results.get(), conf.outputPath);
                     
                 } catch (IOException | InterruptedException | ExecutionException e) {
                     e.printStackTrace();

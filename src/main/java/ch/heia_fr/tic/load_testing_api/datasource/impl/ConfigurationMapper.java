@@ -47,7 +47,7 @@ public class ConfigurationMapper implements ConfigurationHandler {
     
     @Override
     public Configuration getConfiguration(String name) {
-        if (!alreadyExists(name)){
+        if (!alreadyExists(name)) {
             throw new NotFoundException("Configuration doesn't exist.");
         }
         return new Configuration(name, getLTConfigurationFromName(name), getDSMConfigurationFromFile(name));
@@ -77,12 +77,28 @@ public class ConfigurationMapper implements ConfigurationHandler {
         return null;
     }
     
+    /**
+     * Checks if the specified configuration already exists.
+     *
+     * @param name the name of the configuration
+     * @return a boolean that indicates if the configuration already exists
+     */
     private boolean alreadyExists(String name) {
         return ((new File(String.format(LT_CONFIG_FILE_PATTERN, name))).exists() ||
                 (new File(String.format(DSM_CONFIG_FILE_PATTERN, name))).exists());
     }
     
+    /**
+     * Maps the data in the specified file to a {@code LTConfiguration}.
+     *
+     * @param name the name of the configuration
+     * @return a {@code LTConfiguration} with the data of the file
+     */
     private LTConfiguration getLTConfigurationFromName(String name) {
+        if (!(new File(String.format(LT_CONFIG_FILE_PATTERN, name))).exists()) {
+            return null;
+        }
+        
         Properties props = getPropsFromFile(String.format(LT_CONFIG_FILE_PATTERN, name));
         return new LTConfiguration(
                 props.getProperty("baseURL"),
@@ -90,12 +106,18 @@ public class ConfigurationMapper implements ConfigurationHandler {
                 props.getProperty("httpMethod"),
                 props.getProperty("requestBody"),
                 props.getProperty("contentType"),
-                props.getProperty("authType"),
                 props.getProperty("apiKey"),
+                props.getProperty("authType"),
                 Integer.parseInt(props.getProperty("numberOfRequests"))
         );
     }
     
+    /**
+     * Writes a {@code LTConfiguration}.in a properties file.
+     *
+     * @param config the {@code LTConfiguration} to write
+     * @param name   the name of the configuration
+     */
     private void writeLTConfigurationToFile(LTConfiguration config, String name) {
         Properties props = new Properties();
         props.setProperty("outputPath", ResultMapper.LT_RESULT_PATH);
@@ -110,7 +132,17 @@ public class ConfigurationMapper implements ConfigurationHandler {
         writePropsToFile(props, String.format(LT_CONFIG_FILE_PATTERN, name));
     }
     
+    /**
+     * Maps the data in the specified file to a {@code DSMConfiguration}.
+     *
+     * @param name the name of the configuration
+     * @return a {@code DSMConfiguration} with the data of the file
+     */
     private DSMConfiguration getDSMConfigurationFromFile(String name) {
+        if (!(new File(String.format(DSM_CONFIG_FILE_PATTERN, name))).exists()) {
+            return null;
+        }
+        
         Properties props = getPropsFromFile(String.format(DSM_CONFIG_FILE_PATTERN, name));
         return new DSMConfiguration(
                 props.getProperty("jmx.uri"),
@@ -121,6 +153,12 @@ public class ConfigurationMapper implements ConfigurationHandler {
         );
     }
     
+    /**
+     * Writes a {@code DSMConfiguration}.in a properties file.
+     *
+     * @param config the {@code DSMConfiguration} to write
+     * @param name   the name of the configuration
+     */
     private void writeDSMConfigurationToFile(DSMConfiguration config, String name) {
         Properties props = new Properties();
         props.setProperty("outputPath", ResultMapper.DSM_RESULT_PATH);
@@ -132,6 +170,13 @@ public class ConfigurationMapper implements ConfigurationHandler {
         writePropsToFile(props, String.format(DSM_CONFIG_FILE_PATTERN, name));
     }
     
+    /**
+     * Writes a {@code LTConfiguration}.in a properties file.
+     *
+     * @param props    the properties object to put in the file
+     * @param filepath the path of the file
+     * @throws WebApplicationException if there is an error while writing to the file
+     */
     private void writePropsToFile(Properties props, String filepath) {
         try (OutputStream output = new FileOutputStream(filepath)) {
             props.store(output, null);
@@ -140,6 +185,13 @@ public class ConfigurationMapper implements ConfigurationHandler {
         }
     }
     
+    /**
+     * Maps the data in the specified file to a {@code DSMConfiguration}.
+     *
+     * @param filepath the name of the configuration
+     * @return a {@code Properties} object with the data of the file
+     * @throws WebApplicationException if there is an error while reading the file
+     */
     private Properties getPropsFromFile(String filepath) {
         try (InputStream input = new FileInputStream(filepath)) {
             Properties props = new Properties();
