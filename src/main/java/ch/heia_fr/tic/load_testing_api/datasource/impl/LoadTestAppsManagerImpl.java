@@ -24,10 +24,12 @@ import java.util.concurrent.ExecutionException;
 public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     private final LoadTestHandler loadTestHandler;
     private final JMXMonitorHandler dataSourceMonitorHandler;
+    private String lastExecutedConfiguration;
     
     public LoadTestAppsManagerImpl() {
         loadTestHandler = new LoadTestHandler();
         dataSourceMonitorHandler = new JMXMonitorHandler();
+        lastExecutedConfiguration = "";
     }
     
     @Override
@@ -38,6 +40,7 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
         if (configuration.dsmConfiguration != null) {
             runDataSourceMonitor(String.format(ConfigurationMapper.DSM_CONFIG_FILE_PATTERN, configuration.name));
         }
+        lastExecutedConfiguration = configuration.name;
     }
     
     @Override
