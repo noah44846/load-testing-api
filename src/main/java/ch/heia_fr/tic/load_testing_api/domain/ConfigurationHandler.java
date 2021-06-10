@@ -44,7 +44,7 @@ public interface ConfigurationHandler {
      * @param configuration the {@code Configuration} that will replace the stored one
      * @return the old {@code Configuration}, or {@code null} if the {@code Configuration} does not exist
      */
-    Configuration updateConfiguration(Configuration configuration);
+    void updateConfiguration(String name, Configuration configuration);
     
     /**
      * Deletes an configuration.
@@ -52,5 +52,5 @@ public interface ConfigurationHandler {
      * @param name the unique name of the configuration to delete
      * @return the deleted {@code Configuration}, or {@code null} if the configuration does not exist
      */
-    Configuration deleteConfiguration(String name);
+    void deleteConfiguration(String name);
 }

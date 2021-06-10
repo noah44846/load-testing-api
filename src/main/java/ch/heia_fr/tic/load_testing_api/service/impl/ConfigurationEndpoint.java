@@ -16,6 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.ws.WebServiceException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 
 /**
  * Implements the service endpoint for the configuration resource.
@@ -37,7 +38,10 @@ public class ConfigurationEndpoint implements ConfigurationService {
     
     @Override
     public Response getConfigurationList() {
-        return null;
+        ConfigurationHandler configurationHandler = StorageFactory.getConfigurationStorage();
+        Collection<Configuration> configurations = configurationHandler.getConfigurationList();
+        ResponseBuilder responseBuilder = Response.ok(configurations);
+        return responseBuilder.build();
     }
     
     @Override
@@ -69,9 +73,13 @@ public class ConfigurationEndpoint implements ConfigurationService {
     
     @Override
     public void updateConfiguration(Configuration configuration, String name) {
+        ConfigurationHandler configurationHandler = StorageFactory.getConfigurationStorage();
+        configurationHandler.updateConfiguration(name, configuration);
     }
     
     @Override
     public void deleteConfiguration(String name) {
+        ConfigurationHandler categoryHandler = StorageFactory.getConfigurationStorage();
+        categoryHandler.deleteConfiguration(name);
     }
 }

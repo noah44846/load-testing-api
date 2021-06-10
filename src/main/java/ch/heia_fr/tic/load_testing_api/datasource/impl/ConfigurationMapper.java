@@ -10,8 +10,8 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import java.io.*;
-import java.util.Collection;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Manages the configuration data in the storage.
@@ -42,7 +42,28 @@ public class ConfigurationMapper implements ConfigurationHandler {
     
     @Override
     public Collection<Configuration> getConfigurationList() {
-        return null;
+        Stream<File> ltConfigs = Arrays.stream(new File(LT_CONFIG_DIR).listFiles()).filter(File::isFile);
+        Stream<File> dsmConfigs = Arrays.stream(new File(DSM_CONFIG_DIR).listFiles()).filter(File::isFile);
+        HashMap<String, Configuration> configMap = new HashMap<>();
+        
+        ltConfigs.forEach(f -> {
+            String name = f.getName().split("\\.")[0];
+            LTConfiguration ltConf = getLTConfigurationFromName(name);
+            configMap.put(name, new Configuration(name, ltConf, null));
+        });
+        
+        dsmConfigs.forEach(f -> {
+            String name = f.getName().split("\\.")[0];
+            DSMConfiguration dsmConf = getDSMConfigurationFromFile(name);
+            if (configMap.containsKey(name)) {
+                Configuration conf = configMap.get(name);
+                configMap.put(name, new Configuration(name, conf.ltConfiguration, dsmConf));
+            } else {
+                configMap.put(name, new Configuration(name,null, dsmConf));
+            }
+        });
+        
+        return configMap.values();
     }
     
     @Override
@@ -68,13 +89,18 @@ public class ConfigurationMapper implements ConfigurationHandler {
     }
     
     @Override
-    public Configuration updateConfiguration(Configuration configuration) {
-        return null;
+    public void updateConfiguration(String name, Configuration configuration) {
+        if (!alreadyExists(name)) {
+            throw new NotFoundException("Configuration doesn't exists.");
+        }
+        deleteConfiguration(name);
+        addConfiguration(configuration);
     }
     
     @Override
-    public Configuration deleteConfiguration(String name) {
-        return null;
+    public void deleteConfiguration(String name) {
+        (new File(String.format(LT_CONFIG_FILE_PATTERN, name))).delete();
+        (new File(String.format(DSM_CONFIG_FILE_PATTERN, name))).delete();
     }
     
     /**
