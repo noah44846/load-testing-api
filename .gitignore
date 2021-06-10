@@ -12,7 +12,3 @@ log/
 # Compile and build folders
 out/
 build/
-
-# Load testing applications output
-output/
-configurations/
