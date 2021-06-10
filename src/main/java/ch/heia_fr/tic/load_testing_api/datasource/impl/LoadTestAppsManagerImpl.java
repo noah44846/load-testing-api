@@ -57,7 +57,8 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     public Status getStatus() {
         return new Status(
                 loadTestHandler.isRunning() ? TestStatus.RUNNING : TestStatus.IDLE,
-                dataSourceMonitorHandler.isRunning() ? TestStatus.RUNNING : TestStatus.IDLE);
+                dataSourceMonitorHandler.isRunning() ? TestStatus.RUNNING : TestStatus.IDLE,
+                lastExecutedConfiguration);
     }
     
     /**
