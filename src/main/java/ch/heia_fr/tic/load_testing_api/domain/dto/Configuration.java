@@ -23,12 +23,12 @@ public final class Configuration {
     /**
      * JSON property name for the load test configuration
      */
-    static final String LT_CONFIGURATION = "ltConfiguration";
+    static final String LT_CONFIGURATION = "loadTestConfiguration";
     
     /**
      * JSON property name for the dataSource monitor configuration
      */
-    static final String DSM_CONFIGURATION = "dsmConfiguration";
+    static final String DSM_CONFIGURATION = "dataSourceMonitorConfiguration";
     
     /**
      * The name of the configuration
@@ -38,23 +38,23 @@ public final class Configuration {
     /**
      * The configuration of the load test app
      */
-    public final LTConfiguration ltConfiguration;
+    public final LTConfiguration loadTestConfiguration;
     
     /**
      * The configuration of the dataSource monitor app
      */
-    public final DSMConfiguration dsmConfiguration;
+    public final DSMConfiguration dataSourceMonitorConfiguration;
     
     /**
      * Returns a new {@code Configuration} with its properties initialized from parameters (used by Jackson for the request payload deserialization).
      *
      * @param name             the name of the configuration
-     * @param ltConfiguration  the configuration of the load test app
-     * @param dsmConfiguration the configuration of the dataSource monitor app
+     * @param loadTestConfiguration  the configuration of the load test app
+     * @param dataSourceMonitorConfiguration the configuration of the dataSource monitor app
      */
-    public Configuration(@JsonProperty(NAME) String name, @JsonProperty(LT_CONFIGURATION) LTConfiguration ltConfiguration, @JsonProperty(DSM_CONFIGURATION) DSMConfiguration dsmConfiguration) {
+    public Configuration(@JsonProperty(NAME) String name, @JsonProperty(LT_CONFIGURATION) LTConfiguration loadTestConfiguration, @JsonProperty(DSM_CONFIGURATION) DSMConfiguration dataSourceMonitorConfiguration) {
         this.name = name;
-        this.ltConfiguration = ltConfiguration;
-        this.dsmConfiguration = dsmConfiguration;
+        this.loadTestConfiguration = loadTestConfiguration;
+        this.dataSourceMonitorConfiguration = dataSourceMonitorConfiguration;
     }
 }

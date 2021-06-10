@@ -57,7 +57,7 @@ public class ConfigurationMapper implements ConfigurationHandler {
             DSMConfiguration dsmConf = getDSMConfigurationFromFile(name);
             if (configMap.containsKey(name)) {
                 Configuration conf = configMap.get(name);
-                configMap.put(name, new Configuration(name, conf.ltConfiguration, dsmConf));
+                configMap.put(name, new Configuration(name, conf.loadTestConfiguration, dsmConf));
             } else {
                 configMap.put(name, new Configuration(name,null, dsmConf));
             }
@@ -79,11 +79,11 @@ public class ConfigurationMapper implements ConfigurationHandler {
         if (alreadyExists(configuration.name)) {
             throw new BadRequestException("Configuration already exists.");
         }
-        if (configuration.ltConfiguration != null) {
-            writeLTConfigurationToFile(configuration.ltConfiguration, configuration.name);
+        if (configuration.loadTestConfiguration != null) {
+            writeLTConfigurationToFile(configuration.loadTestConfiguration, configuration.name);
         }
-        if (configuration.dsmConfiguration != null) {
-            writeDSMConfigurationToFile(configuration.dsmConfiguration, configuration.name);
+        if (configuration.dataSourceMonitorConfiguration != null) {
+            writeDSMConfigurationToFile(configuration.dataSourceMonitorConfiguration, configuration.name);
         }
         return getConfiguration(configuration.name);
     }

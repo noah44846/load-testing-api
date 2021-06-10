@@ -39,10 +39,10 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
         if (loadTestHandler.isRunning() || dataSourceMonitorHandler.isRunning()) {
             throw new ClientErrorException("A test is already running. Wait for this test to finnish", Response.Status.CONFLICT);
         }
-        if (configuration.ltConfiguration != null) {
+        if (configuration.loadTestConfiguration != null) {
             runLoadTest(String.format(ConfigurationMapper.LT_CONFIG_FILE_PATTERN, configuration.name));
         }
-        if (configuration.dsmConfiguration != null) {
+        if (configuration.dataSourceMonitorConfiguration != null) {
             runDataSourceMonitor(String.format(ConfigurationMapper.DSM_CONFIG_FILE_PATTERN, configuration.name));
         }
         lastExecutedConfiguration = configuration.name;
