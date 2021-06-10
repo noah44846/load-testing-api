@@ -49,6 +49,11 @@ public class ServiceError implements Serializable {
     static final String DESCRIPTION_3XX = "Further action must be taken in order to complete the request.";
     
     /**
+     * The description for the 4XX HTTP codes family
+     */
+    static final String DESCRIPTION_4XX = "The request contains bad syntax or cannot be fulfilled.";
+    
+    /**
      * The description for the 5XX HTTP codes family
      */
     static final String DESCRIPTION_5XX = "The server failed to fulfill an apparently valid request.";
