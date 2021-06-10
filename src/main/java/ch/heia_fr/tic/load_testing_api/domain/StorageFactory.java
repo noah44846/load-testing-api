@@ -1,5 +1,6 @@
 package ch.heia_fr.tic.load_testing_api.domain;
 
+import ch.heia_fr.tic.load_testing_api.datasource.impl.ConfigurationMapper;
 import ch.heia_fr.tic.load_testing_api.datasource.impl.ResultMapper;
 
 /**
@@ -9,6 +10,15 @@ import ch.heia_fr.tic.load_testing_api.datasource.impl.ResultMapper;
  */
 public enum StorageFactory {
     ;
+    
+    /**
+     * Returns a loosely coupled storage to manage user data.
+     *
+     * @return a storage handler for the user data
+     */
+    public static ConfigurationHandler getConfigurationStorage() {
+        return new ConfigurationMapper();
+    }
     
     /**
      * Returns a loosely coupled storage to get the result data.

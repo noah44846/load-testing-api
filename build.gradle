@@ -25,5 +25,6 @@ dependencies {
 
     // LT & DSM
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
     implementation files('libs/loadtest.jar', 'libs/datasource_monitor.jar')
 }

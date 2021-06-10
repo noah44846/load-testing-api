@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * @author Noah Godel (noah.godel@hefr.ch)
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-@JsonPropertyOrder({"loadTestStatus", "dataSourceMonitorStatus"})
+@JsonPropertyOrder({"loadTestStatus", "dataSourceMonitorStatus", "lastExecutedConfiguration"})
 public class Status {
     
     /**
@@ -23,14 +23,21 @@ public class Status {
     public final TestStatus dataSourceMonitorStatus;
     
     /**
+     * The name of the last configuration that was executed
+     */
+    public final String lastExecutedConfiguration;
+    
+    /**
      * Returns a new {@code Status} with its properties initialized from parameters.
      *
      * @param loadTestStatus the status of the load test app
      * @param dataSourceMonitorStatus the status of the DataSource monitor app
+     * @param lastExecutedConfiguration the name of the last configuration that was executed
      */
-    public Status(TestStatus loadTestStatus, TestStatus dataSourceMonitorStatus) {
+    public Status(TestStatus loadTestStatus, TestStatus dataSourceMonitorStatus, String lastExecutedConfiguration) {
         this.loadTestStatus = loadTestStatus;
         this.dataSourceMonitorStatus = dataSourceMonitorStatus;
+        this.lastExecutedConfiguration = lastExecutedConfiguration;
     }
     
     /**
