@@ -10,7 +10,9 @@ import ch.heia_fr.tic.loadtest.LoadTestHandler;
 
 import javax.management.MalformedObjectNameException;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -34,6 +36,9 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     
     @Override
     public void run(Configuration configuration) {
+        if (loadTestHandler.isRunning() || dataSourceMonitorHandler.isRunning()) {
+            throw new ClientErrorException("A test is already running. Wait for this test to finnish", Response.Status.CONFLICT);
+        }
         if (configuration.ltConfiguration != null) {
             runLoadTest(String.format(ConfigurationMapper.LT_CONFIG_FILE_PATTERN, configuration.name));
         }
@@ -82,10 +87,8 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
                 }
                 loadTestHandler.stop();
             });
-        } catch (IOException e) {
+        } catch (IOException | IllegalStateException e) {
             throw new WebApplicationException(e);
-        } catch (IllegalStateException e) {
-            throw new BadRequestException(e);
         }
     }
     
@@ -111,10 +114,8 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
                 }
                 loadTestHandler.stop();
             });
-        } catch (IOException | MalformedObjectNameException e) {
+        } catch (IOException | MalformedObjectNameException | IllegalStateException e) {
             throw new WebApplicationException(e);
-        } catch (IllegalStateException e) {
-            throw new BadRequestException(e);
         }
     }
 }
