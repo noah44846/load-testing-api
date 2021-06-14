@@ -79,12 +79,17 @@ public class ConfigurationMapper implements ConfigurationHandler {
         if (alreadyExists(configuration.name)) {
             throw new BadRequestException("Configuration already exists.");
         }
-        if (configuration.loadTestConfiguration != null) {
-            writeLTConfigurationToFile(configuration.loadTestConfiguration, configuration.name);
+        if (configuration.loadTestConfiguration == null && configuration.dataSourceMonitorConfiguration == null) {
+            throw new BadRequestException("At least one of the apps need a configuration.");
+        } else {
+            if (configuration.loadTestConfiguration != null) {
+                writeLTConfigurationToFile(configuration.loadTestConfiguration, configuration.name);
+            }
+            if (configuration.dataSourceMonitorConfiguration != null) {
+                writeDSMConfigurationToFile(configuration.dataSourceMonitorConfiguration, configuration.name);
+            }
         }
-        if (configuration.dataSourceMonitorConfiguration != null) {
-            writeDSMConfigurationToFile(configuration.dataSourceMonitorConfiguration, configuration.name);
-        }
+        
         return getConfiguration(configuration.name);
     }
     

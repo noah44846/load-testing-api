@@ -6,11 +6,12 @@ import ch.heia_fr.tic.load_testing_api.domain.LoadTestAppsManager;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Configuration;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Status;
 import ch.heia_fr.tic.load_testing_api.domain.dto.Status.TestStatus;
+import ch.heia_fr.tic.load_testing_api.utils.PropertiesUtility;
 import ch.heia_fr.tic.loadtest.LoadTestHandler;
 
 import javax.management.MalformedObjectNameException;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     
     public LoadTestAppsManagerImpl() {
         loadTestHandler = new LoadTestHandler();
-        dataSourceMonitorHandler = new JMXMonitorHandler();
+        dataSourceMonitorHandler = new JMXMonitorHandler(PropertiesUtility.getPropertyValue("jmx.uri"));
         lastExecutedConfiguration = "";
     }
     
@@ -51,8 +52,7 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
     @Override
     public void stop() {
         if (!loadTestHandler.isRunning() && !dataSourceMonitorHandler.isRunning()) {
-            // throw a 400 because no app is running
-            throw new BadRequestException("No testing app is running.");
+            throw new NotFoundException("No testing app is running.");
         }
         loadTestHandler.stop();
         dataSourceMonitorHandler.stop();
@@ -71,7 +71,6 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
      *
      * @param configPath the path of the config to run
      * @throws WebApplicationException if there is an error parsing the configuration
-     * @throws BadRequestException     if the app is already running
      */
     private void runLoadTest(String configPath) {
         try {
@@ -97,7 +96,6 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
      *
      * @param configPath the path of the config to run
      * @throws WebApplicationException if there is an error parsing the configuration or running the test
-     * @throws BadRequestException     if the app is already running
      */
     private void runDataSourceMonitor(String configPath) {
         try {
