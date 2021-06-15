@@ -110,7 +110,7 @@ public class LoadTestAppsManagerImpl implements LoadTestAppsManager {
                 } catch (IOException | InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
-                loadTestHandler.stop();
+                dataSourceMonitorHandler.stop();
             });
         } catch (IOException | MalformedObjectNameException | IllegalStateException e) {
             throw new WebApplicationException(e);
